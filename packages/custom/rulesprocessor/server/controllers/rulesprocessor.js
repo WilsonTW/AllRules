@@ -41,8 +41,9 @@ var testrule = function (statement,testdoc) {
     console.log('Evaluating Statement='+statement
                 + '\n   Document=' + JSON.stringify({scope:testdoc}));
     result = expression.eval();
-    if (isNaN(result) || result === undefined) { result = null;}
-    console.log('\n   Eval Result='+result);
+    //if (isNaN(result) || result === undefined) { result = null;}
+    if (result === undefined) { result = null;}
+    console.log('   Eval Result='+result+'\n');
     return result ; 
 }
 
@@ -139,9 +140,11 @@ exports.processevent = function(req,res) {
                     return sendresults(req,res,400,{error:'Error in Then expression or document' + ex}); 
                 }
             try {
-                    if ( req.body.execElse !== undefined ) { 
+                    if ( req.body.execElse !== undefined ) {
+                    if ( req.body.execElse !== '' ) { 
                         results.resExecElse = testrule(req.body.execElse,
                                             req.body.document);
+                    }
                     }
                 } catch (ex) {
                     return sendresults(req,res,400,{error:'Error in Else expression or document' + ex}); 
