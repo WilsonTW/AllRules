@@ -28,7 +28,7 @@ module.exports = {
   },
   hostname: 'http://localhost:3000',
   app: {
-    name: 'MEAN - A Modern Stack - Production'
+    name: 'AllRules - A Simple Rules Engine - Production'
   },
   logging: {
     format: 'combined'

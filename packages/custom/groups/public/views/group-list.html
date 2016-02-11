@@ -1,0 +1,20 @@
+<section data-ng-controller="GroupsController" data-ng-init="find()">
+  <ul class="groups unstyled">
+    <li data-ng-repeat="group in groups">
+      <span>{{group.created | date:'medium'}}</span> /
+      <span>{{group.user.name}}</span>
+      <h2>
+        <a data-ng-href="/groups/{{group._id}}">{{group.name}}</a>
+        <span data-ng-if="hasAuthorization(group)">
+          <a class="btn" href="/groups/{{group._id}}/edit">
+            <i class="glyphicon glyphicon-edit"></i>
+          </a>
+          <a class="btn" data-ng-click="remove(group);">
+            <i class="glyphicon glyphicon-trash"></i>
+          </a>
+        </span>
+      </h2>
+    </li>
+  </ul>
+  <h1 data-ng-hide=" groups.length>0">No groups yet. <br> Why don't you <a href="/groups/create">Create One</a>?</h1>
+</section>

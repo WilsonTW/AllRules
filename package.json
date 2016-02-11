@@ -1,9 +1,9 @@
 {
-  "name": "mean",
-  "description": "MEAN.io: A fullstack JavaScript framework powered by MongoDB, ExpressJS, AngularJS, NodeJS.",
-  "version": "0.5.5",
+  "name": "allrules",
+  "description": "A simple rules engine with rule builder and runtime engine available through REST APIs based on the MEAN.io stack",
+  "version": "0.0.1",
   "private": false,
-  "author": "Linnovate <mean@linnovate.net>",
+  "author": "Javier Navarro <javier.e.navarro@gmail.com>",
   "contributors": "https://github.com/linnovate/mean/graphs/contributors",
   "mean": "0.5.5",
   "repository": {
@@ -22,8 +22,8 @@
   "dependencies": {
     "assetmanager": "latest",
     "async": "latest",
-    "bower": "latest",
     "body-parser": "latest",
+    "bower": "latest",
     "compression": "latest",
     "connect-flash": "latest",
     "consolidate": "latest",
@@ -32,6 +32,7 @@
     "express": "latest",
     "forever": "latest",
     "gridfs-stream": "latest",
+    "jshiki": "0.0.3",
     "jsonwebtoken": "latest",
     "lodash": "latest",
     "meanio": "latest",

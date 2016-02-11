@@ -1,0 +1,70 @@
+<section data-ng-controller="RulesController" data-ng-init="find()">
+    <p/>
+
+  <form>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+
+        <input type="text" class="form-control" placeholder="Search Text" ng-model="searchText">
+
+      </div>      
+    </div>
+  </form>
+    <h5> <i class="glyphicon glyphicon-plus"></i> <a href="/rules/create"> Create a rule</a></h5>
+    <table class="table table-bordered table-striped">
+        <tr>
+
+            <th><a href="#" ng-click="sortType = 'group'; sortReverse = !sortReverse">Group<span ng-show="sortType == 'group'" class="fa fa-caret-down"></span></a></th>
+            <th><a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">Name<span ng-show="sortType == 'name'" class="fa fa-caret-down"></span></a></th>
+            <th>Enabled</th>
+            <th>Valid From</th>
+            <th>Valid To</th>
+            <th>Order</th>
+            <th><a href="#" ng-click="sortType = 'execWhenKey'; sortReverse = !sortReverse">Event<span ng-show="sortType == 'execWhenKey'" class="fa fa-caret-down"></span></a></th>
+            <th>Created</th>
+            <th>Created by</th>
+            <th>Actions</th>
+        </tr>
+        <tr data-ng-repeat="rule in rules | orderBy:sortType:sortReverse | filter:searchText">
+            <td>{{rule.group.name}}</td>
+            <td>{{rule.name}}</td>
+            <td>{{rule.enabled}}</td>
+            <td>{{rule.validFrom | date:'mediumDate'}}</td>
+            <td>{{rule.validTo | date:'mediumDate'}}</td>
+            <td>{{rule.execOrder}}</td>
+            <td>{{rule.execWhenKey}}</td>
+            <td>{{rule.created | date:'mediumDate'}}</td>
+            <td>{{rule.user.name}}</td>
+            <td>
+                <a class="btn" href="/rules/{{rule._id}}/edit">
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+                <a class="btn" data-ng-click="remove(rule);">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </a>
+            </td>
+        </tr>
+    </table>
+    <!--
+    <ul class="rules unstyled">
+        <li data-ng-repeat="rule in rules">
+            <span>{{rule.created | date:'medium'}}</span> /
+            <span>{{rule.user.name}}</span>
+            <h2>
+        <a data-ng-href="/rules/{{rule._id}}">{{rule.name}}</a>
+        <span data-ng-if="hasAuthorization(rule)">
+          <a class="btn" href="/rules/{{rule._id}}/edit">
+            <i class="glyphicon glyphicon-edit"></i>
+          </a>
+          <a class="btn" data-ng-click="remove(rule);">
+            <i class="glyphicon glyphicon-trash"></i>
+          </a>
+        </span>
+      </h2>
+            <div>{{rule.execIf}}</div>
+        </li>
+    </ul>
+    -->
+    
+</section>

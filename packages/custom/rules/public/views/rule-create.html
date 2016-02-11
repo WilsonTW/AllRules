@@ -1,0 +1,279 @@
+<section data-ng-controller="RulesController">
+
+    <!--  <form name="outerForm" class="tab-form-demo"> -->
+    <form name="ruleForm" class="form-horizontal col-md-12 tab-form-demo" role="form" data-ng-submit="create(ruleForm.$valid)"
+    novalidate>
+        <uib-tabset>
+            <uib-tab>
+                <uib-tab-heading>Basic Data <i class="glyphicon glyphicon-edit"></i></uib-tab-heading>
+                <p />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.name.$invalid }">
+                            <label mean-token="'create-name'" for="name" class="col-md-3 control-label">Rule Name</label>
+                            <div class="col-md-9">
+                                <input name="name" type="text" class="form-control" data-ng-model="rule.name" id="name" placeholder="Rule Name" required>
+                                <div ng-show="submitted && ruleForm.name.$invalid" class="help-block">
+                                    <p ng-show="ruleForm.name.$error.required">Name is required</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-12">
+
+                                <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.group.$invalid }" data-ng-init="findGroups()">
+                                    <label mean-token="'create-group'" for="group" class="col-md-6 control-label">Group</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" ng-model="rule.group" ng-options="group.name for group in groups track by group._id"></select>
+                                        <div ng-show="submitted && ruleForm.enabled.$invalid" class="help-block">
+                                            <p ng-show="ruleForm.enabled.$error.required"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+
+
+                                <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.enabled.$invalid }">
+                                    <label mean-token="'create-enabled'" for="enabled" class="col-md-6 control-label">Enabled</label>
+                                    <div class="col-md-6">
+                                        <input name="enabled" type="checkbox" class="form-control" data-ng-model="rule.enabled" id="enabled" required>
+                                        <div ng-show="submitted && ruleForm.enabled.$invalid" class="help-block">
+                                            <p ng-show="ruleForm.enabled.$error.required">Enabled</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.execOrder.$invalid }">
+                            <label mean-token="'create-execOrder'" for="execOrder" class="col-md-3 control-label">Rule Execution Order</label>
+                            <div class="col-md-9">
+                                <input name="execOrder" type="number" class="form-control" data-ng-model="rule.execOrder" id="execOrder" placeholder="Rule Excution Order" required>
+                                <div ng-show="submitted && ruleForm.execOrder.$invalid" class="help-block">
+                                    <p ng-show="ruleForm.execOrder.$error.required">Execution Order is required</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.validFrom.$invalid }">
+                            <label mean-token="'create-validFrom'" for="validFrom" class="col-md-3 control-label">Valid From</label>
+                            <div class="col-md-9">
+                                <p class="input-group">
+                                    <input type="text" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="rule.validFrom" is-open="popup1.opened"
+                                    min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true"
+                                    close-text="Close" alt-input-formats="altInputFormats" />
+                                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openpicker1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                                </p>
+                                <div ng-show="submitted && ruleForm.validFrom.$invalid" class="help-block">
+                                    <p ng-show="ruleForm.validFrom.$error.required">Valid From date is required</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.validTo.$invalid }">
+                            <label mean-token="'create-validTo'" for="validTo" class="col-md-3 control-label">Valid To</label>
+                            <div class="col-md-9">
+                                <p class="input-group">
+                                    <input type="text" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="rule.validTo" is-open="popup2.opened"
+                                    min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true"
+                                    close-text="Close" alt-input-formats="altInputFormats" />
+                                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openpicker2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                                </p>
+                                <div ng-show="submitted && ruleForm.validTo.$invalid" class="help-block">
+                                    <p ng-show="ruleForm.validTo.$error.required">Valid To date is required</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </uib-tab>
+            <uib-tab>
+                <uib-tab-heading>Logic Statements <i class="glyphicon glyphicon-random"></i></uib-tab-heading>
+                <p />
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.execWhenKey.$invalid }">
+                            <label mean-token="'create-execWhenKey'" for="execWhenKey" class="col-md-3 control-label">Execute when Event</label>
+                            <div class="col-md-9">
+                                <input name="execWhenKey" type="text" class="form-control" data-ng-model="rule.execWhenKey" id="execWhenKey" placeholder="Execute When"
+                                required>
+                                <i class="glyphicon glyphicon-info-sign"></i>
+                                </p>
+                                <div ng-show="submitted && ruleForm.execWhenKey.$invalid" class="help-block">
+                                    <p ng-show="ruleForm.execWhenKey.$error.required">Execute When is required</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.execIf.$invalid }">
+                            <label mean-token="'create-execIfKey'" for="execifKey" class="col-md-3 control-label">IF ()</label>
+                            <div class="col-md-9">
+                                <textarea name="execIf" type="text" class="form-control" data-ng-model="rule.execIf" 
+                                id="execIf" placeholder="Boolean expression" required cols="30" rows="5"> </textarea>
+                                <i class="glyphicon glyphicon-info-sign"></i>
+                                </p>
+                                <div ng-show="submitted && ruleForm.execIf.$invalid" class="help-block">
+                                    <p ng-show="ruleForm.execIf.$error.required">Execute If is required</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.execThen.$invalid }">
+                            <label mean-token="'create-execThen'" for="execThen" class="col-md-3 control-label">THEN ()</label>
+                            <div class="col-md-9">
+                                <textarea name="execThen" type="text" class="form-control" data-ng-model="rule.execThen" 
+                                id="execThen" placeholder="String to return if expression evaluates true" required cols="30" rows="5"></textarea>
+                                <div ng-show="submitted && ruleForm.execThen.$invalid" class="help-block">
+                                    <p ng-show="ruleForm.execThen.$error.required">Then Execute is required</p>
+                                    <p ng-show="ruleForm.execThen.$error.exprinvalid">Syntax error in the expression</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.execElse.$invalid }">
+                            <label mean-token="'create-execElse'" for="execElse" class="col-md-3 control-label">ELSE ()</label>
+                            <div class="col-md-9">
+                                <textarea name="execElse" type="text" class="form-control" data-ng-model="rule.execElse" 
+                                id="execElse" placeholder="(optional) String to return if expression evaluates false" cols="30" rows="5"></textarea>
+                                <div ng-show="submitted && ruleForm.execElse.$invalid" class="help-block">
+                                    <p ng-show="ruleForm.execElse.$error.exprinvalid">Syntax error in the expression</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-md-6">
+                        <p/>
+                        <!--    
+                        <div class="form-group" >
+                            <label class="col-md-3 control-label">Test Data Format</label>
+                            <div class="btn-group">
+                                <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'json'" uncheckable>json</label>
+                                <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'xml'" uncheckable>xml</label>
+                            </div>
+                        </div>   -->
+                        <p/>
+  <div class="panel panel-info">
+      <div class="panel-heading">Test Data</div>
+      <div class="panel-body">
+
+                        <div class="form-group" >
+                            <label class="col-md-3 control-label">Test Document</label>
+                            <div class="col-md-9">
+                                <textarea name="testdata" type="text" class="form-control" data-ng-model="testdata" id="testdata" ng-change="documentupdate(testdata)" placeholder="json object e.g. {'var1':20,'var2':6}"
+                                 cols="30" rows="5"></textarea>
+                                <div ng-show="testdataerror" class="help-block">
+                                    <p>Invalid JSON document</p>
+                                </div>
+                            </div>
+                          
+                        </div>
+                        <div  class="col-md-offset-3 col-md-9">
+                            <button type="button" class="btn btn-info" ng-click="cmdtestdata(testdata,rule.execIf, rule.execThen, rule.execElse)"><i class="glyphicon glyphicon-play-circle"></i> Test expressions</button>
+                            <p/>        
+                        </div>
+                        <p/>    
+                        <div class="form-group" >
+                            <label class="col-md-3 control-label">Test output</label>
+                            <div class="col-md-9">
+                                <div plunker-content="markup">
+                                            <pre ><code data-language="html">
+{{testdataresult}}
+                                            </code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+    </div>
+  </div>
+                        
+
+                    </div>
+                </div>
+
+
+
+
+            </uib-tab>
+        </uib-tabset>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+                <button mean-token="'create-submit'" type="submit" class="btn btn-info">Save</button>
+            </div>
+        </div>
+    </form>
+
+</section>
+<!--<section data-ng-controller="RulesController">
+  <form name="ruleForm" class="form-horizontal col-md-6" role="form" data-ng-submit="create(ruleForm.$valid)" novalidate>
+    <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.name.$invalid }">
+      <label mean-token="'create-name'" class="col-md-3 control-label">Name</label>
+      <div class="col-md-9">
+        <input name="name" type="text" class="form-control" data-ng-model="rule.name" id="name" placeholder="Rule Name" required>
+        <div ng-show="submitted && ruleForm.name.$invalid" class="help-block">
+          <p ng-show="ruleForm.name.$error.required">Name is required</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.execWhenKey.$invalid }">
+      <label mean-token="'create-execWhenKey'" class="col-md-3 control-label">When:</label>
+      <div class="col-md-9">
+        <input name="execWhenKey" type="text" class="form-control" data-ng-model="rule.execWhenKey" id="execWhenKey" placeholder="Execute When" required>
+        <div ng-show="submitted && ruleForm.execWhenKey.$invalid" class="help-block">
+          <p ng-show="ruleForm.execWhenKey.$error.required">Execute When is required</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.execIf.$invalid }">
+      <label mean-token="'create-execIfKey'" class="col-md-3 control-label">If:</label>
+      <div class="col-md-9">
+        <input name="execIf" type="text" class="form-control" data-ng-model="rule.execIf" id="execIf" placeholder="Execute If" required>
+        <div ng-show="submitted && ruleForm.execIf.$invalid" class="help-block">
+          <p ng-show="ruleForm.execIf.$error.required">Execute If is required</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{ 'has-error' : submitted && ruleForm.execThen.$invalid }">
+      <label mean-token="'create-execThen'" class="col-md-3 control-label">Then:</label>
+      <div class="col-md-9">
+        <input name="execThen" type="text" class="form-control" data-ng-model="rule.execThen" id="execThen" placeholder="Then Execute" required>
+        <div ng-show="submitted && ruleForm.execThen.$invalid" class="help-block">
+          <p ng-show="ruleForm.execThen.$error.required">Then Execute is required</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <div class="col-md-offset-3 col-md-9">
+        <button mean-token="'create-submit'" type="submit" class="btn btn-info">Submit</button>
+      </div>
+    </div>
+  </form>
+</section>
+-->

@@ -1,0 +1,14 @@
+<section data-ng-controller="GroupsController" data-ng-init="findOne()">
+  <span>{{group.created | date:'medium'}}</span> /
+  <span>{{group.user.name}}</span>
+  <h2>{{group.name}}</h2>
+  <div data-ng-if="hasAuthorization(group)">
+    <a class="btn" href="/groups/{{group._id}}/edit">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn" data-ng-click="remove(group);">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <div>{{group.name}}</div>
+</section>
