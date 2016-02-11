@@ -26,6 +26,7 @@
     "bower": "latest",
     "compression": "latest",
     "connect-flash": "latest",
+    "connect-modrewrite": "latest",
     "consolidate": "latest",
     "cookie-parser": "latest",
     "errorhandler": "latest",
@@ -55,7 +56,6 @@
     "view-helpers": "latest"
   },
   "devDependencies": {
-    "connect-modrewrite": "latest",
     "del": "latest",
     "expect.js": "latest",
     "gulp": "latest",
@@ -89,6 +89,7 @@
     "karma-requirejs": "latest",
     "karma-script-launcher": "latest",
     "mocha": "latest",
+    "phantomjs-prebuilt": "latest",
     "protractor": "latest",
     "require-dir": "latest",
     "requirejs": "latest",
