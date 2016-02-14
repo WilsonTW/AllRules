@@ -73,11 +73,11 @@ amount<20000 && creditRating > 7
 ```
 THEN:
 ```bash
-    "APPROVED"
+    state:"APPROVED"
 ```
 Else:
 ```bash
-    "REJECTED"
+    state:"REJECTED"
 ```
 
 Example document sent:
@@ -92,8 +92,8 @@ Example document sent:
 }
 ```
 Response returned:
-```bash
-    {"result":"APPROVED"}
+```json
+    {"result":{"state":"APPROVED"}}
 ```
 
 
@@ -105,7 +105,7 @@ creditRating < 5
 ```
 THEN:
 ```bash
-    "REJECTED"
+    state:"REJECTED"
 ```
 Else:
 ```bash
@@ -125,10 +125,10 @@ Example document sent:
 ```
 Response returned:
 ```json
-    {"result":"REJECTED"}
+    {"result":{"state":"REJECTED"}}
 ```
 
-Business Rule 3: `When a new Car Loan is submitted for credit rating = 10, increase the amount by 1%`
+Business Rule 3: `When a new Car Loan is submitted for credit rating = 10, approve it and increase the amount by 1%`
 
 IF:
 ```bash
@@ -136,7 +136,7 @@ creditRating === 10
 ```
 THEN:
 ```json
-    amount * 1.01
+    state:"APPROVED",amount:amount * 1.01
 ```
 Else:
 ```json
@@ -156,27 +156,23 @@ Example document sent:
 ```
 Response returned:
 ```json
-    {"result":12455.32}
+    {"result":{"state":"APPROVED","amount":12455.32}}
 ```
 
 
-## Using the REST APIs
-If you want to install AllRules by yourself
-
-
 ## Installation
-If you want to install AllRules by yourself
-### if-then-else examples
+If you want to install AllRules in runtime mode, after checking out the code for AllRules, follow the instructions below. More information on MEAN framework in [MEAN.io](http://mean.io/) website.  
+ 
 
 ```bash
 $ npm install -g mean-cli
-$ mean init <myApp>
 $ cd <myApp> && npm install
 ```
 
 ### Invoke node with a task manager
 Mean supports the gulp task runner for various services which are applied on the code.
-To start your application run -
+To start your application run:
+
 ```bash
 $ gulp
 ```
