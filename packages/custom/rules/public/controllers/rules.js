@@ -159,9 +159,9 @@ angular.module('mean.rules').controller('RulesController', ['$scope', '$statePar
                     $scope.testdataresult = '';
                 } else {
                     $scope.testdataresult = '' + 
-                    'IF() evaluated to: ' + response.data.resExecIf + 
-                    '\nThen() evaluated to: ' + response.data.resExecThen +
-                    '\nElse() evaluated to: ' + response.data.resExecElse;
+                    'IF() evaluated to: ' + response.data.resExecIf.var0 + 
+                    '\nThen() evaluated to: ' + JSON.stringify(response.data.resExecThen) +
+                    '\nElse() evaluated to: ' + JSON.stringify(response.data.resExecElse);
                 }
             }, function errorCallback(response) {
                 $scope.testdataresult = 'Error: (HTTP ' + response.status + ') ' +  response.data.error;

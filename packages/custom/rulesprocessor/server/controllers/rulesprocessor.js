@@ -35,16 +35,39 @@ var savelog = function (sourceip,event,reqbody,response,httpstatus) {
     return;
 }
 
-var testrule = function (statement,testdoc) {
-    var expression = jshiki.parse(statement,{scope:testdoc});
-    var result;
+/*
+var: blabla=expression;
+var: dkjdfkds=expression;
+*/
+
+
+var testrule = function (statement,testdoc,iscomplexstatement) {
+    var expression, result, results,i;
+    var listexpr;
+    statement = statement.replace(/\n/g,"");
+    listexpr = statement.split(',');
     console.log('Evaluating Statement='+statement
                 + '\n   Document=' + JSON.stringify({scope:testdoc}));
-    result = expression.eval();
-    //if (isNaN(result) || result === undefined) { result = null;}
-    if (result === undefined) { result = null;}
-    console.log('   Eval Result='+result+'\n');
-    return result ; 
+    results={};                  
+    for (i=0;i<listexpr.length;i++){
+        var fieldname = '';
+        var fieldvalue;
+        if (listexpr[i].search(':')<0 || !iscomplexstatement) {
+            fieldvalue = listexpr[i];
+        } else {
+            fieldname = listexpr[i].split(':')[0];
+            fieldvalue = listexpr[i].split(':')[1];
+        }
+        if (fieldname==='') {
+            fieldname='var'+i;
+        }
+        expression = jshiki.parse(fieldvalue,{scope:testdoc});                
+        result = expression.eval();
+        if (result === undefined) { result = null;}
+        console.log('   Eval Result='+result+'\n');
+        results[fieldname]=result;
+    }
+    return results;
 }
 
 var parseDocAllRules = function (req,res, event,document) {
@@ -70,16 +93,16 @@ var parseDocAllRules = function (req,res, event,document) {
                     try {
                         if ( rules[i].execIf !== undefined ) {
                             results.resExecIf = testrule(rules[i].execIf,
-                                                document);
+                                                document,false);
                         }
                         if ( rules[i].execThen !== undefined ) {
                             results.resExecThen = testrule(rules[i].execThen,
-                                                document);
+                                                document,true);
                         }
                         if ( rules[i].execElse !== undefined ) {
                             if ( rules[i].execElse !== '' ) {
                                 results.resExecElse = testrule(rules[i].execElse,
-                                                    document);
+                                                    document,true);
                             }
                         }
                         if (results.resExecIf === true ) {  // tests also the type to be boolean
@@ -127,7 +150,7 @@ exports.processevent = function(req,res) {
             try {
                     if ( req.body.execIf !== undefined ) {
                         results.resExecIf = testrule(req.body.execIf,
-                                            req.body.document);
+                                            req.body.document,false);
                     } 
                 } catch (ex) {
                     return sendresults(req,res,400,{error:'Error in IF expression or document ' + ex});
@@ -135,7 +158,7 @@ exports.processevent = function(req,res) {
             try {
                     if ( req.body.execThen !== undefined ) { 
                         results.resExecThen = testrule(req.body.execThen,
-                                            req.body.document);
+                                            req.body.document,true);
                     }
                 } catch (ex) {
                     return sendresults(req,res,400,{error:'Error in Then expression or document' + ex}); 
@@ -144,7 +167,7 @@ exports.processevent = function(req,res) {
                     if ( req.body.execElse !== undefined ) {
                     if ( req.body.execElse !== '' ) { 
                         results.resExecElse = testrule(req.body.execElse,
-                                            req.body.document);
+                                            req.body.document,true);
                     }
                     }
                 } catch (ex) {
