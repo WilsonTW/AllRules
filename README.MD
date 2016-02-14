@@ -34,10 +34,135 @@ All Rules is a multi-purpose rules engine. It allows the end user to quickly con
 ![processing-log](https://cloud.githubusercontent.com/assets/7155108/12968242/e904cd62-d04d-11e5-96b8-c1a0d4f57ae2.png)
 
 
-## Docker image for evaluation
+## Using the REST API
+Rules can be invoked by sending a json document with the payload to the rules server: 
 
-* There is a docker image that can be used as test/evaluation for AllRules. By default it is configured as development environment, do not try to use it in production.
-Image available here: http://docker 
+HTTP Method: PUT
+
+URL: http://XXXXXX/api/rulesprocessor/eventname
+
+Payload: 
+```json
+    {"document":
+                {
+                "var1":value,
+                "var2":value,
+                "var3":value,
+                ...
+                }
+```
+
+Response:
+```json
+    {"result":"approved"}
+```
+Notes:
+* Top-level "document" field is mandatory. var1, var2, var... can be set to any value depending on the business scenario. 
+* The value for XXX is set as per the business rules configured.
+* "Eventname" value in the URL will be used to filter out the rules to execute. Only the rules that the field "Execute when Event" equal the eventname in the URL will be executed.
+
+## Rule Examples
+
+Assuming whenever a new car loan is created, a message with EventName=NewLoan describing the loan is sent to the rules server:
+
+Business Rule 1: `When a new Car Loan is submitted, automatically approve it if the amount is below 20000 and the credit rating is above 7`
+
+IF:
+```bash
+amount<20000 && creditRating > 7
+```
+THEN:
+```bash
+    "APPROVED"
+```
+Else:
+```bash
+    "REJECTED"
+```
+
+Example document sent:
+```json
+{"document":
+            {
+            "customerid":63562754,
+            "amount":12332,
+            "creditRating":9,
+            "loanlines":"331241-22"
+            }
+}
+```
+Response returned:
+```bash
+    {"result":"APPROVED"}
+```
+
+
+Business Rule 2: `When a new Car Loan is submitted, automatically reject it if the credit rating is below 5`
+
+IF:
+```bash
+creditRating < 5
+```
+THEN:
+```bash
+    "REJECTED"
+```
+Else:
+```bash
+    (leave empty)
+```
+
+Example document sent:
+```json
+{"document":
+            {
+            "customerid":63562754,
+            "amount":12332,
+            "creditRating":1,
+            "loanlines":"331241-22"
+            }
+}
+```
+Response returned:
+```json
+    {"result":"REJECTED"}
+```
+
+Business Rule 3: `When a new Car Loan is submitted for credit rating = 10, increase the amount by 1%`
+
+IF:
+```bash
+creditRating === 10
+```
+THEN:
+```json
+    amount * 1.01
+```
+Else:
+```json
+    (leave empty)
+```
+
+Example document sent:
+```json
+{"document":
+            {
+            "customerid":63562754,
+            "amount":12332,
+            "creditRating":1,
+            "loanlines":"331241-22"
+            }
+}
+```
+Response returned:
+```json
+    {"result":12455.32}
+```
+
+
+## Using the REST APIs
+If you want to install AllRules by yourself
+
 
 ## Installation
 If you want to install AllRules by yourself
@@ -54,6 +179,10 @@ Mean supports the gulp task runner for various services which are applied on the
 To start your application run -
 ```bash
 $ gulp
+```
+or 
+```bash
+$ node server.js
 ```
 
 

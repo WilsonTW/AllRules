@@ -133,11 +133,13 @@ angular.module('mean.rules').controller('RulesController', ['$scope', '$statePar
     }
     
     $scope.cmdtestdata = function (testdata,execIf,execThen,execElse) {
+        var td={};
         $scope.testdataerror=false;
         try{
-            testdata = JSON.parse(testdata);
+            td = JSON.parse(testdata);
         } catch (ex) {
             $scope.testdataerror=true;
+            return;
         }
         $scope.testdataresult = '';    
         $http({
@@ -147,7 +149,7 @@ angular.module('mean.rules').controller('RulesController', ['$scope', '$statePar
                 'Content-Type': 'application/json'
                 },
             data: {
-                "document": testdata,
+                "document": td,
                 "execIf":execIf,
                 "execThen":execThen,
                 "execElse":execElse

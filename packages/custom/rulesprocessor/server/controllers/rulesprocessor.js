@@ -109,8 +109,9 @@ exports.processevent = function(req,res) {
             sendresults(req,res,400,{"error": "Missing event name in URL"});
             return;
         }
-        if (req.query.doctype === undefined && req.query.doctype !== 'json') {
-            sendresults(req,res,422,{"error": "Doctypes allowed: json"});
+        console.log(req.headers['content-type']);
+        if (req.headers['content-type'] !== 'application/json' ) {
+            sendresults(req,res,422,{"error": "Only allowed Content-Type: application/json"});
             return;
         }
         if ( req.body === undefined ) { 

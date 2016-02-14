@@ -178,7 +178,7 @@
 
                         <div class="form-group" >
                             <label class="col-md-3 control-label">Test Document</label>
-                            <div class="col-md-9">
+                            <div class="col-md-9" ng-class="{ 'has-error' : testdataerror }">
                                 <textarea name="testdata" type="text" class="form-control" data-ng-model="testdata" id="testdata" ng-change="documentupdate(testdata)" placeholder="json object e.g. {'var1':20,'var2':6}"
                                  cols="30" rows="5"></textarea>
                                 <div ng-show="testdataerror" class="help-block">
