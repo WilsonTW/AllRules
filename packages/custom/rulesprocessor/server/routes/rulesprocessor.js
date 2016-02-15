@@ -7,7 +7,7 @@
 module.exports = function(rulesprocessor, app, auth, database) {
 
     
-    app.get('/api/rulesprocessor/logs/entries', function(req, res, next) {
+    app.get('/api/rulesprocessor/logs/entries/:page', function(req, res, next) {
         var rulesprocessor = require ('../controllers/rulesprocessor');
         rulesprocessor.getlogentries(req,res);
   });

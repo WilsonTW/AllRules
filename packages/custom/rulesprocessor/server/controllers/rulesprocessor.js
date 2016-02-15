@@ -3,8 +3,11 @@
 var jshiki = require('jshiki');
 var mongoose = require('mongoose'),
     Rule = mongoose.model('Rule'),
-    RulesProcessor = mongoose.model('RulesProcessor');
-    
+    RulesProcessor = mongoose.model('RulesProcessor'),
+    RulesProcessorConfig = mongoose.model('RulesProcessorConfig');
+
+var messagessincelastpurge = 0;
+ 
 // Processes rules locally
 
 var sendresults = function(req,res,httpstatus,payload) {
@@ -31,15 +34,11 @@ var savelog = function (sourceip,event,reqbody,response,httpstatus) {
         if (err) {
             console.log('Cannot save logentry');
         }
+        messagessincelastpurge++;
+        purgelog();
     });
     return;
 }
-
-/*
-var: blabla=expression;
-var: dkjdfkds=expression;
-*/
-
 
 var testrule = function (statement,testdoc,iscomplexstatement) {
     var expression, result, results,i;
@@ -105,7 +104,7 @@ var parseDocAllRules = function (req,res, event,document) {
                                                     document,true);
                             }
                         }
-                        if (results.resExecIf === true ) {  // tests also the type to be boolean
+                        if (results.resExecIf.var0 === true ) {  // tests also the type to be boolean
                             sendresults(req,res,200,(results.resExecThen === null) ? {"result":{}}: {"result":results.resExecThen});
                             return;
                         }
@@ -184,18 +183,27 @@ exports.processevent = function(req,res) {
 
 
 exports.getlogentries = function(req,res) {
-    RulesProcessor.find({}).sort('-timestamp')
-                .exec(function(err, entries) {
-                if (err) {
-                    return res.status(500).json({
-                        error: 'Cannot list the log entries'
-                    });
-                }
+    var perPage = 20
+        , page = req.param('page') > 0 ? req.param('page') : 1
 
-                res.json(entries)
-            });    
-    
+    RulesProcessor
+        .find()
+        .limit(perPage)
+        .skip(perPage * (page -1))
+        .sort('-timestamp')
+        .exec(function (err, events) {
+        RulesProcessor.count().exec(function (err, count) {
+            res.json({"events":events
+            , page: page
+            , pages: count / perPage
+            , totalitems: count
+            });
+        })
+        })    
 }
+
+
+  
 
 exports.clearentries = function(req,res) {
     RulesProcessor.remove({}, function(err) {
@@ -207,4 +215,39 @@ exports.clearentries = function(req,res) {
             }
         });
     res.status(200).json({"result":"OK"});
+}
+
+var purgelog = function() {
+    // since purging is a costly operation, only happens every 10 processed messages.
+    // Number 10 is arbitrary and not persisted in the DB on purpose
+    
+    if (messagessincelastpurge<10) {
+        return;
+    }    
+    RulesProcessorConfig.find({})
+                .exec(function(err, entries) {
+                if (err) {
+                    console.log('Cannot purge log entries');
+                    };               
+                if (entries.length>0) {
+                    if (entries[0].keeplasttype==='E')
+                        RulesProcessor
+                            .find()
+                            .sort('-timestamp')
+                            .skip(entries[0].keeplast)
+                            .exec(function(err,docs) {
+                                if (err) {
+                                        console.log('Error purgin log entries');
+                                }
+                                else {
+                                    docs.forEach( function (doc) {
+                                        doc.remove();
+                                    });
+                                    console.log('Purged log entries');
+                                    messagessincelastpurge =0;
+                                }
+                                });               
+                    };
+                });    
+    
 }

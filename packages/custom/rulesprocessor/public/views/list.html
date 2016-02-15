@@ -10,8 +10,8 @@
 
       </div>      
     </div>
-  </form>
-  <h5> <i class="glyphicon glyphicon-thrash"></i> <a href="#" ng-click="clearlogs()"> Clear Log</a></h5>
+  </form>   
+  <h5> <i class="glyphicon glyphicon-trash"></i> <a href="#" ng-click="clearlogs()"> Clear Log</a></h5>
     <table class="table table-bordered table-striped">
         <tr>
             <th>Timestamp</th>
@@ -21,7 +21,7 @@
             <th>Response</th>
             <th>HTTP Status</th>
         </tr>
-        <tr data-ng-repeat="entry in logentries | filter:searchText">
+        <tr data-ng-repeat="entry in logentries.events | filter:searchText">
             <td>{{entry.timestamp | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
             <td>{{entry.sourceip}}</td>
             <td>{{entry.event}}</td>
@@ -30,6 +30,5 @@
             <td>{{entry.httpstatus}}</td>
         </tr>
     </table>
-
-    
+    <uib-pagination total-items="logtotalitems" num-pages="pages" ng-model="logcurrentpage" ng-change="pageChanged()"></uib-pagination>
 </section>
