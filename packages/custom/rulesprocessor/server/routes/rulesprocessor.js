@@ -22,5 +22,10 @@ module.exports = function(rulesprocessor, app, auth, database) {
         rulesprocessor.processevent(req,res);
   });
 
+    app.get('/api/rulesprocessor/logs/getmsgcounts', function(req, res, next) {
+        var dashboard = require ('../controllers/dashboard');
+        dashboard.getmsgcounts(req,res);
+  });
+
 
 };

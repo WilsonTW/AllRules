@@ -16,6 +16,8 @@ Rulesprocessor.register(function(app, auth, database) {
   //We enable routing. By default the Package Object is passed to the routes
   Rulesprocessor.routes(app, auth, database);
 
+
+
   //We are adding a link to the main menu for all authenticated users
   Rulesprocessor.menus.add({
     title: 'Processing Log',
@@ -25,6 +27,11 @@ Rulesprocessor.register(function(app, auth, database) {
   });
   
   Rulesprocessor.aggregateAsset('css', 'rulesprocessor.css');
+  Rulesprocessor.aggregateAsset('js', '../lib/angular-google-chart/ng-google-chart.min.js', {
+        absolute: false,
+        global: true
+    });
+  Rulesprocessor.angularDependencies(['angular-google-chart']);
 
   /**
     //Uncomment to use. Requires meanio@0.3.7 or above

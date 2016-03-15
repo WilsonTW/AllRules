@@ -1,5 +1,7 @@
 {
   "name": "rulesprocessor",
   "version": "0.0.1",
-  "dependencies": {}
+  "dependencies": {
+    "angular-google-chart": "~0.1.0"
+  }
 }

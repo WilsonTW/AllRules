@@ -1,7 +1,7 @@
 'use strict';
 
 /* jshint -W098 */
-angular.module('mean.rulesprocessor').controller('rulesprocessorController', ['$scope', 'Global', 'rulesprocessor','$http','$window',
+angular.module('mean.rulesprocessor', ['googlechart']).controller('rulesprocessorController', ['$scope', 'Global', 'rulesprocessor','$http','$window',
   function($scope, Global, rulesprocessor,$http,$window) {
     $scope.global = Global;
 
@@ -14,7 +14,20 @@ angular.module('mean.rulesprocessor').controller('rulesprocessorController', ['$
     };
     
     $scope.logentries = [];
-   
+    $scope.chartObject = [];
+    
+    $scope.getdashboarddata = function() {
+        $scope.chartObject = [];
+        $http({
+                method: 'GET',
+                url: '/api/rulesprocessor/logs/getmsgcounts'})
+            .then(function successCallback(response) {
+                $scope.chartObject = response.data;
+                console.log(response.data);
+                console.log('executed query dashboard');
+            });        
+    }
+    
     $scope.findentries = function() {
         $scope.logentries = [];
             
@@ -45,8 +58,6 @@ angular.module('mean.rulesprocessor').controller('rulesprocessorController', ['$
             
         }        
     }
-  
-  
   
   }
 ]);

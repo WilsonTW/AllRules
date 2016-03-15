@@ -144,7 +144,7 @@ angular.module('mean.rules').controller('RulesController', ['$scope', '$statePar
         $scope.testdataresult = '';    
         $http({
             method: 'PUT',
-            url: '/api/rulesprocessor/eventname?doctype=json',
+            url: '/api/rulesprocessor/testdata' ,
             headers: {
                 'Content-Type': 'application/json'
                 },
