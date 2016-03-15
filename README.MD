@@ -31,8 +31,7 @@ All Rules is a multi-purpose rules engine. It allows the end user to quickly con
 `Editing if-then-else and testing rules`
 ![rules-logic](https://cloud.githubusercontent.com/assets/7155108/12968238/e8fb5430-d04d-11e5-9bbf-05f40afadd15.png)
 `Viewing REST APIs processing logs`
-![processing-log](https://cloud.githubusercontent.com/assets/7155108/12968242/e904cd62-d04d-11e5-96b8-c1a0d4f57ae2.png)
-
+![processing-log](https://cloud.githubusercontent.com/assets/7155108/13796051/48b0cac2-eae3-11e5-836d-2b4d99152747.png)
 
 ## Using the REST API
 Rules can be invoked by sending a json document with the payload to the rules server: 
