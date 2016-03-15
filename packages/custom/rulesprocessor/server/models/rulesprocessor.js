@@ -53,7 +53,7 @@ var RulesProcessorConfigSchema = new Schema({
   },
   keeplast: {
     type: Number,
-    default:500
+    default:1500
   },
 });
 
